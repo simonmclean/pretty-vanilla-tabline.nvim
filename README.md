@@ -10,7 +10,7 @@ into this 🤩
 
 ![Plugin tabline](assets/screenshot_plugin.png?raw=true "Plugin tabline")
 
-## What this plugin does does
+## What this plugin does
 
 Using default configuration your tab titles will consist of
 
@@ -19,6 +19,8 @@ Using default configuration your tab titles will consist of
 ```
 
 The filename and filetype will refer to the active window of each tab. Filename will take priority over filetype.
+
+See below for how to change this display configuration.
 
 ## Installation
 
@@ -33,7 +35,7 @@ require "pretty-vanilla-tabline".setup()
 
 ## Configuration
 
-At the moment, the only configuration you can provide is filetype icons.
+### filetype_icons
 
 This plugin will try to use `require 'nvim-web-devicons'.get_icon_by_filetype` for the icons. But some filetypes won't have an associated icon. In such cases no icon will be shown, unless you specifiy one. For example, if you want to use the git icon for the `fugitive` filetype.
 
@@ -41,11 +43,36 @@ This plugin will try to use `require 'nvim-web-devicons'.get_icon_by_filetype` f
 require 'pretty-vanilla-tabline'.setup {
   filetype_icons = {
     fugitive = require 'nvim-web-devicons'.get_icon_by_filetype('git')
-  }
+  },
+}
+```
+
+### formatter
+
+Use this to display how the icon, title and window count are displayed. The example below changes the order, and change the `[]` surrounding the window count to `()`.
+
+```lua
+require 'pretty-vanilla-tabline'.setup {
+  formatter = function(icon, title, win_count)
+    -- Return any string you like
+    return '(' .. win_count .. ') ' .. title .. ' ' icon
+  end,
+}
+```
+
+This can of course be used to remove elements as well. For example if you don't want to display the window count, just don't include it in the returned string.
+
+### empty_tab_title
+
+Override the text to display for empty tabs (tabs with no buffers).
+
+```lua
+require 'pretty-vanilla-tabline'.setup {
+  empty_tab_title = '-- empty tab --'
 }
 ```
 
 ## TODO
 
-- Expose formatting functions
 - Handle insufficient width
+- Make highlight groups configurable
