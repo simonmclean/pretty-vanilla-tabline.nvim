@@ -1,3 +1,5 @@
+local api = vim.api
+
 local default_config = {
   filetype_icons = {},
   formatter = function(icon, title, win_count)
@@ -6,18 +8,15 @@ local default_config = {
   empty_tab_title = '[empty tab]'
 }
 
---[[
-Example config
-{
-  filetype_icons = {
-    fugitive = devicons.get_icon_by_filetype("git")
-  },
-  formatter = function(icon, title, win_count)
-    return '(' .. win_count .. ') ' .. title
-  end
-}
---]]
 local setup = function(config)
+  local required_version = '0.8.1'
+
+  if (vim.fn.has('nvim-' .. required_version) == 0) then
+    local msg = "pretty-vanilla-tabline requires neovim version " .. required_version .. " or above"
+    api.nvim_echo({ { msg, "WarningMsg" } }, true, {})
+    return
+  end
+
   config = {
     filetype_icons = config.filetype_icons or default_config.filetype_icons,
     formatter = config.formatter or default_config.formatter,
@@ -25,7 +24,6 @@ local setup = function(config)
   }
 
   local _ = require 'pretty-vanilla-tabline.utils'
-  local api = vim.api
   local devicon_installed, devicons = pcall(require, 'nvim-web-devicons')
 
   local function with_padding(str)
@@ -112,8 +110,6 @@ local setup = function(config)
 
     return result_ordered
   end
-
-  _G.x = get_tab_win_buf_tree
 
   _G.pretty_vanilla_tabline_switch_tab = function(id)
     api.nvim_set_current_tabpage(id)
