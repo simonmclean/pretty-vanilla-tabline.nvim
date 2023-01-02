@@ -37,7 +37,7 @@ local setup = function(config)
   end
 
   local function with_click_handler(tab_id, str)
-    return '%' .. tab_id .. '@v:lua.my_custom_tabline_switch_tab@' .. str .. '%T'
+    return '%' .. tab_id .. '@v:lua.pretty_vanilla_tabline_switch_tab@' .. str .. '%T'
   end
 
   local function get_tab_win_buf_tree()
@@ -115,11 +115,11 @@ local setup = function(config)
 
   _G.x = get_tab_win_buf_tree
 
-  _G.my_custom_tabline_switch_tab = function(id)
+  _G.pretty_vanilla_tabline_switch_tab = function(id)
     api.nvim_set_current_tabpage(id)
   end
 
-  _G.my_custom_tabline = function()
+  _G.pretty_vanilla_tabline = function()
     -- For each tab set the title
     local tabs = _.list_map(get_tab_win_buf_tree(), function(tab)
       local filename = _.last(_.split_string(tab.active_win.buf_name, '/'))
@@ -166,7 +166,7 @@ local setup = function(config)
     return tabline
   end
 
-  vim.o.tabline = '%!v:lua.my_custom_tabline()'
+  vim.o.tabline = '%!v:lua.pretty_vanilla_tabline()'
 
 end
 
