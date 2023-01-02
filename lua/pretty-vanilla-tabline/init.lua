@@ -1,19 +1,28 @@
--- TODO
--- Handle insufficient width to display tabs
--- Consider making this is a configurable plugin
-
-local default_config = {}
+local default_config = {
+  filetype_icons = {},
+  formatter = function(icon, title, win_count)
+    return icon .. ' ' .. title .. ' [' .. win_count .. ']'
+  end,
+  empty_tab_title = '[empty tab]'
+}
 
 --[[
 Example config
 {
   filetype_icons = {
     fugitive = devicons.get_icon_by_filetype("git")
-  }
+  },
+  formatter = function(icon, title, win_count)
+    return '(' .. win_count .. ') ' .. title
+  end
 }
 --]]
 local setup = function(config)
-  config = config or default_config
+  config = {
+    filetype_icons = config.filetype_icons or default_config.filetype_icons,
+    formatter = config.formatter or default_config.formatter,
+    empty_tab_title = config.empty_tab_title or default_config.empty_tab_title
+  }
 
   local _ = require 'pretty-vanilla-tabline.utils'
   local api = vim.api
@@ -35,7 +44,7 @@ local setup = function(config)
     --[[
   The final result will be a table of [tab_id] to [data] where [data] contains:
   tab_id : number
-  title : string
+  title : string (filename or filetype)
   is_active : boolean
   win_count : number
   active_win.win_id : number
@@ -72,7 +81,7 @@ local setup = function(config)
         local buf_filetype = api.nvim_buf_get_option(buf_id, 'filetype')
         local buf_filetype_icon = _.eval(function()
           -- Check if config specifies an icon
-          if (config.filetype_icons and config.filetype_icons[buf_filetype]) then
+          if (config.filetype_icons[buf_filetype]) then
             return config.filetype_icons[buf_filetype]
           end
           -- Otherwise try to get one from devicons
@@ -115,39 +124,41 @@ local setup = function(config)
     local tabs = _.list_map(get_tab_win_buf_tree(), function(tab)
       local filename = _.last(_.split_string(tab.active_win.buf_name, '/'))
 
-      -- If there's an icon, add a space after it
-      local icon = _.eval(function()
-        if (tab.active_win.buf_filetype_icon) then
-          return tab.active_win.buf_filetype_icon .. ' '
+      tab.title = _.eval(function()
+        if (filename == "") then
+          if (tab.active_win.buf_filetype == "") then
+            return config.empty_tab_title
+          else
+            return tab.active_win.buf_filetype
+          end
         end
-        return ''
+        return filename
       end)
-
-      -- Set tab title to filename, or filetype, or fallback
-      if (filename == "") then
-        if (tab.active_win.buf_filetype == "") then
-          tab['title'] = '[empty tab]'
-        else
-          tab['title'] = icon .. tab.active_win.buf_filetype
-        end
-      else
-        tab['title'] = icon .. filename
-      end
-
-      tab['title'] = tab.title .. ' [' .. tab.win_count .. ']'
 
       return tab
     end)
 
     -- Create the tabline strings, including highlight groups
     local tabline_strings = _.list_map(tabs, function(tab)
+      local full_tab_title = config.formatter(
+        tab.active_win.buf_filetype_icon,
+        tab.title,
+        tab.win_count
+      )
+
       local highlight_group = _.eval(function()
         if (tab.is_active) then
           return 'TabLineSel'
         end
         return 'TabLine'
       end)
-      return with_highlight_group(highlight_group, with_padding(with_click_handler(tab.tab_id, tab.title)))
+
+      return with_highlight_group(
+        highlight_group,
+        with_padding(
+          with_click_handler(tab.tab_id, full_tab_title)
+        )
+      )
     end)
 
     local tabline = _.list_join(tabline_strings) .. '%#TabLineFill#%='
