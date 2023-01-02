@@ -37,7 +37,7 @@ require "pretty-vanilla-tabline".setup()
 
 ### filetype_icons
 
-This plugin will try to use `require 'nvim-web-devicons'.get_icon_by_filetype` for the icons. But some filetypes won't have an associated icon. In such cases no icon will be shown, unless you specifiy one. For example, if you want to use the git icon for the `fugitive` filetype.
+pretty-vanilla-tabline will try to use `require 'nvim-web-devicons'.get_icon_by_filetype` for the icons. But some filetypes won't have an associated icon. In such cases no icon will be shown, unless you specifiy one. For example, if you want to use the git icon for the `fugitive` filetype.
 
 ```lua
 require 'pretty-vanilla-tabline'.setup {
@@ -49,7 +49,7 @@ require 'pretty-vanilla-tabline'.setup {
 
 ### formatter
 
-Use this to display how the icon, title and window count are displayed. The example below changes the order, and change the `[]` surrounding the window count to `()`.
+Use this to change how the icon, title and window count are displayed. The example below swaps the order, and changes the `[]` surrounding the window count to `()`.
 
 ```lua
 require 'pretty-vanilla-tabline'.setup {
