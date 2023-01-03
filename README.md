@@ -49,7 +49,7 @@ require 'pretty-vanilla-tabline'.setup {
 
 ### formatter
 
-Use this to change how the icon, title, window count, and modified indicator are displayed. The example below swaps the order, and changes the `[]` surrounding the window count to `()`.
+Use this to change how the icon, title, window count, and modified indicator are displayed.
 
 ```lua
 require 'pretty-vanilla-tabline'.setup {
