@@ -2,7 +2,7 @@
 
 Minimal plugin which makes the neovim tabline pretty and configurable, while maintaining default functionality.
 
-Turn this monstrosity 🤢
+Turn this monstrosity 🤮
 
 ![Default tabline](assets/screenshot_default.png?raw=true "Default tabline")
 
@@ -81,5 +81,4 @@ require 'pretty-vanilla-tabline'.setup {
 
 ## TODO
 
-- Unsaved changes indicator
 - Handle insufficient width
