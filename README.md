@@ -2,11 +2,11 @@
 
 Minimal plugin which makes the neovim tabline pretty and configurable, while maintaining default functionality.
 
-Turn this 🤢
+Turn this monstrosity 🤢
 
 ![Default tabline](assets/screenshot_default.png?raw=true "Default tabline")
 
-into this 🤩
+into this spectacle of superlative beauty 🤩
 
 ![Plugin tabline](assets/screenshot_plugin.png?raw=true "Plugin tabline")
 
@@ -37,7 +37,7 @@ require "pretty-vanilla-tabline".setup()
 
 ### filetype_icons
 
-pretty-vanilla-tabline will try to use `require 'nvim-web-devicons'.get_icon_by_filetype` for the icons. But some filetypes won't have an associated icon. In such cases no icon will be shown, unless you specifiy one. For example, if you want to use the git icon for the `fugitive` filetype.
+pretty-vanilla-tabline will try to use `require 'nvim-web-devicons'.get_icon_by_filetype` for the icons. But some filetypes won't have an associated icon. In such cases no icon will be shown, unless you specify one. For example, if you want to use the git icon for the `fugitive` filetype.
 
 ```lua
 require 'pretty-vanilla-tabline'.setup {
@@ -49,13 +49,17 @@ require 'pretty-vanilla-tabline'.setup {
 
 ### formatter
 
-Use this to change how the icon, title and window count are displayed. The example below swaps the order, and changes the `[]` surrounding the window count to `()`.
+Use this to change how the icon, title, window count, and modified indicator are displayed. The example below swaps the order, and changes the `[]` surrounding the window count to `()`.
 
 ```lua
 require 'pretty-vanilla-tabline'.setup {
-  formatter = function(icon, title, win_count)
-    -- Return any string you like
-    return '(' .. win_count .. ') ' .. title .. ' ' icon
+  formatter = function(icon, title, win_count, is_dirty)
+    local str = icon .. ' ' .. title .. ' [' .. win_count .. ']'
+    if (is_dirty) then
+      str = str .. ' +'
+    end
+    -- return any string you like
+    return str
   end,
 }
 ```
@@ -74,5 +78,5 @@ require 'pretty-vanilla-tabline'.setup {
 
 ## TODO
 
+- Unsaved changes indicator
 - Handle insufficient width
-- Make highlight groups configurable

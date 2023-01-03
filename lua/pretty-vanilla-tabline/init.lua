@@ -2,8 +2,12 @@ local api = vim.api
 
 local default_config = {
   filetype_icons = {},
-  formatter = function(icon, title, win_count)
-    return icon .. ' ' .. title .. ' [' .. win_count .. ']'
+  formatter = function(icon, title, win_count, is_dirty)
+    local str = icon .. ' ' .. title .. ' [' .. win_count .. ']'
+    if (is_dirty) then
+      str = str .. ' +'
+    end
+    return str
   end,
   empty_tab_title = '[empty tab]'
 }
@@ -44,6 +48,7 @@ local setup = function(config)
   tab_id : number
   title : string (filename or filetype)
   is_active : boolean
+  is_dirty : boolean (true if any of the windows have modified buffers)
   win_count : number
   active_win.win_id : number
   active_win.buf_id : number
@@ -72,10 +77,12 @@ local setup = function(config)
     -- Add window and buffer data to the tree
     _.list_foreach(windows, function(win_id)
       local tab_id = api.nvim_win_get_tabpage(win_id)
+      local buf_id = api.nvim_win_get_buf(win_id)
       local is_active_win = api.nvim_tabpage_get_win(tab_id) == win_id
 
+      result[tab_id].is_dirty = result[tab_id].is_dirty or api.nvim_buf_get_option(buf_id, 'modified')
+
       if is_active_win then
-        local buf_id = api.nvim_win_get_buf(win_id)
         local buf_filetype = api.nvim_buf_get_option(buf_id, 'filetype')
         local buf_filetype_icon = _.eval(function()
           -- Check if config specifies an icon
@@ -91,16 +98,16 @@ local setup = function(config)
           end
           return ''
         end)
-        result[tab_id]['active_win'] = {
+        result[tab_id].active_win = {
           win_id = win_id,
           buf_id = buf_id,
           buf_name = api.nvim_buf_get_name(buf_id),
           buf_filetype = buf_filetype,
-          buf_filetype_icon = buf_filetype_icon
+          buf_filetype_icon = buf_filetype_icon,
         }
       end
 
-      result[tab_id]['win_count'] = (result[tab_id]['win_count'] or 0) + 1
+      result[tab_id].win_count = (result[tab_id].win_count or 0) + 1
     end)
 
     -- The way we're indexing puts the tabs out of order. Fixing that here
@@ -139,7 +146,8 @@ local setup = function(config)
       local full_tab_title = config.formatter(
         tab.active_win.buf_filetype_icon,
         tab.title,
-        tab.win_count
+        tab.win_count,
+        tab.is_dirty
       )
 
       local highlight_group = _.eval(function()
