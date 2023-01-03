@@ -78,7 +78,3 @@ require 'pretty-vanilla-tabline'.setup {
   empty_tab_title = '-- empty tab --'
 }
 ```
-
-## TODO
-
-- Handle insufficient width
