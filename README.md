@@ -54,11 +54,14 @@ Use this to change how the icon, title, window count, and modified indicator are
 ```lua
 require 'pretty-vanilla-tabline'.setup {
   formatter = function(icon, title, win_count, is_dirty)
-    local str = icon .. ' ' .. title .. ' [' .. win_count .. ']'
-    if (is_dirty) then
-      str = str .. ' +'
+    local str = ""
+    if (icon ~= "") then
+      str = icon .. " "
     end
-    -- return any string you like
+    str = str .. title .. " [" .. win_count .. "]"
+    if (is_dirty) then
+      str = str .. " +"
+    end
     return str
   end,
 }

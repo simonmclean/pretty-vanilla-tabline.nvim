@@ -3,9 +3,13 @@ local api = vim.api
 local default_config = {
   filetype_icons = {},
   formatter = function(icon, title, win_count, is_dirty)
-    local str = icon .. ' ' .. title .. ' [' .. win_count .. ']'
+    local str = ""
+    if (icon ~= "") then
+      str = icon .. ' '
+    end
+    str = str .. title .. " [" .. win_count .. "]"
     if (is_dirty) then
-      str = str .. ' +'
+      str = str .. " +"
     end
     return str
   end,
