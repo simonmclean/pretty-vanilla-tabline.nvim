@@ -1,4 +1,9 @@
 local api = vim.api
+-- TODO:
+-- maybe introduce an is_empty function which will provide more robust checks, like checking for nil and "" etc.
+-- Make consistent whether we puts things in or out of the setup function
+-- Expose highlight groups
+-- In the readme explain how to add highlighting to elements within the formatter
 
 local default_config = {
   filetype_icons = {},
@@ -13,7 +18,7 @@ local default_config = {
     end
     return str
   end,
-  empty_tab_title = '[empty tab]'
+  empty_window_title = '[empty window]'
 }
 
 local setup = function(config)
@@ -28,7 +33,7 @@ local setup = function(config)
   config = {
     filetype_icons = config.filetype_icons or default_config.filetype_icons,
     formatter = config.formatter or default_config.formatter,
-    empty_tab_title = config.empty_tab_title or default_config.empty_tab_title
+    empty_window_title = config.empty_window_title or default_config.empty_window_title
   }
 
   local _ = require 'pretty-vanilla-tabline.utils'
@@ -139,7 +144,7 @@ local setup = function(config)
       tab.title = _.eval(function()
         if (filename == "") then
           if (tab.active_win.buf_filetype == "") then
-            return config.empty_tab_title
+            return config.empty_window_title
           else
             return tab.active_win.buf_filetype
           end

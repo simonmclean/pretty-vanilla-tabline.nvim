@@ -69,12 +69,12 @@ require 'pretty-vanilla-tabline'.setup {
 
 This can of course be used to remove elements as well. For example if you don't want to display the window count, just don't include it in the returned string.
 
-### empty_tab_title
+### empty_window_title
 
-Override the text to display for empty tabs (tabs with no buffers).
+Override the text to display for empty windows (like when you do `:tabnew`)
 
 ```lua
 require 'pretty-vanilla-tabline'.setup {
-  empty_tab_title = '-- empty tab --'
+  empty_window_title = '[empty window]'
 }
 ```
