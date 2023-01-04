@@ -67,6 +67,22 @@ require 'pretty-vanilla-tabline'.setup {
 }
 ```
 
+### highlight_groups
+
+Change which highlight groups are used. If you set this option you must provide value for every element in the table.
+
+A highlight group basically consists of a background colour and a foreground/text colour, and will be set by your colorscheme. To browse them use `:highlight` or, if you have Telescope installed, `:Telescope highlights`.
+
+```lua
+require 'pretty-vanilla-tabline'.setup {
+  highlight_groups = {
+    tab = 'TabLine',
+    active_tab = 'TabLineSel',
+    tabline_bg = 'TabLineFill',
+  }
+}
+```
+
 This can of course be used to remove elements as well. For example if you don't want to display the window count, just don't include it in the returned string.
 
 ### empty_window_title
