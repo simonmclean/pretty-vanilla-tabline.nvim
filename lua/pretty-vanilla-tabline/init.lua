@@ -2,7 +2,6 @@ local api = vim.api
 -- TODO:
 -- maybe introduce an is_empty function which will provide more robust checks, like checking for nil and "" etc.
 -- Make consistent whether we puts things in or out of the setup function
--- In the readme explain how to add highlighting to elements within the formatter
 
 local default_config = {
   filetype_icons = {},
@@ -34,12 +33,16 @@ local setup = function(config)
     return
   end
 
-  config = {
-    filetype_icons = config.filetype_icons or default_config.filetype_icons,
-    formatter = config.formatter or default_config.formatter,
-    empty_window_title = config.empty_window_title or default_config.empty_window_title,
-    highlight_groups = config.highlight_groups or default_config.highlight_groups
-  }
+  if config then
+    config = {
+      filetype_icons = config.filetype_icons or default_config.filetype_icons,
+      formatter = config.formatter or default_config.formatter,
+      empty_window_title = config.empty_window_title or default_config.empty_window_title,
+      highlight_groups = config.highlight_groups or default_config.highlight_groups
+    }
+  else
+    config = default_config
+  end
 
   local _ = require 'pretty-vanilla-tabline.utils'
   local devicon_installed, devicons = pcall(require, 'nvim-web-devicons')
@@ -182,7 +185,7 @@ local setup = function(config)
       if (tab_truncation_factor > 0) then
         tab.title = '…' .. string.sub(
           tab.title,
-          math.ceil(string.len(tab.title) * tab_truncation_factor) + 1-- plus 1 for the ellipsis
+          math.ceil(string.len(tab.title) * tab_truncation_factor) + 1 -- plus 1 for the ellipsis
         )
         tab.formatted_title = config.formatter(
           tab.active_win.buf_filetype_icon,
