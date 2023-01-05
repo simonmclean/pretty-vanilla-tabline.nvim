@@ -94,3 +94,35 @@ require 'pretty-vanilla-tabline'.setup {
   empty_window_title = '[empty window]'
 }
 ```
+
+## Q&A
+
+> Why another tabline plugin?
+
+Many other plugins are based around fundamentally changing what the (neo)vim tabline is.
+While some may allow you to preserve default functionality, they are either quite large, complex plugins, or just don't provide what I'm looking for.
+
+The goal of pretty-vanilla-tabline is to create a minimal plugin, which allows the user to customise how tabs look and what information they display, while preserving the vanilla tabline experience.
+
+> How do I change highlighting within tabs?
+
+If you'd like to control highlight colours _within_ tabs, you can use vim's funky highlighting syntax in the `formatter` function.
+Here's an example of applying the `CurSearch` highlight group to the "+" indicator.
+
+```lua
+local function with_highlight_group(group_name, str)
+  return '%#' .. group_name .. '#' .. str
+end
+
+require 'pretty-vanilla-tabline'.setup {
+  formatter = function(icon, title, win_count, is_dirty)
+    local str = title
+    if (is_dirty) then
+      str = str .. with_highlight_group('CurSearch', ' +')
+    end
+    return str
+  end,
+}
+```
+
+You can of course create your own highlight groups to use. See `:h nvim_set_hl`
