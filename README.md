@@ -15,7 +15,7 @@ into this spectacle of superlative beauty 🤩
 Using default configuration your tab titles will consist of
 
 ```
-<filetype_icon> <filename or filetype> [<number_of_windows_in_tab>]
+<filetype_icon> <filename or filetype> [<number_of_windows_in_tab>] <modified_buffer_indicator>
 ```
 
 The filename and filetype will refer to the active window of each tab. Filename will take priority over filetype.
@@ -37,7 +37,7 @@ require "pretty-vanilla-tabline".setup()
 
 ### filetype_icons
 
-pretty-vanilla-tabline will try to use `require 'nvim-web-devicons'.get_icon_by_filetype` for the icons. But some filetypes won't have an associated icon. In such cases no icon will be shown, unless you specify one. For example, if you want to use the git icon for the `fugitive` filetype.
+If you have [nvim-web-devicons](https://github.com/nvim-tree/nvim-web-devicons) installed, pretty-vanilla-tabline will try to use `require 'nvim-web-devicons'.get_icon_by_filetype` for the icons. But some filetypes won't have an associated icon. In such cases no icon will be shown, unless you specify one. For example, if you want to use the git icon for the `fugitive` filetype.
 
 ```lua
 require 'pretty-vanilla-tabline'.setup {
@@ -49,13 +49,13 @@ require 'pretty-vanilla-tabline'.setup {
 
 ### formatter
 
-Use this to change how the icon, title, window count, and modified indicator are displayed.
+Use this to change how the icon, title, window count, and modified buffer indicator are displayed.
 
 ```lua
 require 'pretty-vanilla-tabline'.setup {
   formatter = function(icon, title, win_count, is_dirty)
     local str = ""
-    if (icon ~= "") then
+    if (icon) then
       str = icon .. " "
     end
     str = str .. title .. " [" .. win_count .. "]"
@@ -67,9 +67,11 @@ require 'pretty-vanilla-tabline'.setup {
 }
 ```
 
+This can of course be used to remove elements as well. For example if you don't want to display the window count, just don't include it in the returned string.
+
 ### highlight_groups
 
-Change which highlight groups are used. If you set this option you must provide value for every element in the table.
+Change which highlight groups are used. If you set this option _you must provide a value for every element in the table_.
 
 A highlight group basically consists of a background colour and a foreground/text colour, and will be set by your colorscheme. To browse them use `:highlight` or, if you have Telescope installed, `:Telescope highlights`.
 
@@ -82,8 +84,6 @@ require 'pretty-vanilla-tabline'.setup {
   }
 }
 ```
-
-This can of course be used to remove elements as well. For example if you don't want to display the window count, just don't include it in the returned string.
 
 ### empty_window_title
 
