@@ -1,28 +1,4 @@
 local api = vim.api
--- TODO:
--- maybe introduce an is_empty function which will provide more robust checks, like checking for nil and "" etc.
--- Make consistent whether we puts things in or out of the setup function
-
-local default_config = {
-  filetype_icons = {},
-  formatter = function(icon, title, win_count, is_dirty)
-    local str = ""
-    if (icon ~= "") then
-      str = icon .. ' '
-    end
-    str = str .. title .. " [" .. win_count .. "]"
-    if (is_dirty) then
-      str = str .. " +"
-    end
-    return str
-  end,
-  empty_window_title = '[empty window]',
-  highlight_groups = {
-    tab = 'TabLine',
-    active_tab = 'TabLineSel',
-    tabline_bg = 'TabLineFill',
-  }
-}
 
 local setup = function(config)
   local required_version = '0.8.1'
@@ -32,6 +8,27 @@ local setup = function(config)
     api.nvim_echo({ { msg, "WarningMsg" } }, true, {})
     return
   end
+
+  local default_config = {
+    filetype_icons = {},
+    formatter = function(icon, title, win_count, is_dirty)
+      local str = ""
+      if icon then
+        str = icon .. ' '
+      end
+      str = str .. title .. " [" .. win_count .. "]"
+      if is_dirty then
+        str = str .. " +"
+      end
+      return str
+    end,
+    empty_window_title = '[empty window]',
+    highlight_groups = {
+      tab = 'TabLine',
+      active_tab = 'TabLineSel',
+      tabline_bg = 'TabLineFill',
+    }
+  }
 
   if config then
     config = {
@@ -110,11 +107,11 @@ local setup = function(config)
           -- Otherwise try to get one from devicons
           if (devicon_installed and buf_filetype) then
             local icon = devicons.get_icon_by_filetype(buf_filetype)
-            if (icon) then
+            if (not _.is_empty(icon)) then
               return icon
             end
           end
-          return ''
+          return nil
         end)
         result[tab_id].active_win = {
           win_id = win_id,
@@ -150,8 +147,8 @@ local setup = function(config)
       local filename = _.last(_.split_string(tab.active_win.buf_name, '/'))
 
       tab.title = _.eval(function()
-        if (filename == "") then
-          if (tab.active_win.buf_filetype == "") then
+        if (_.is_empty(filename)) then
+          if (_.is_empty(tab.active_win.buf_filetype)) then
             return config.empty_window_title
           else
             return tab.active_win.buf_filetype
@@ -185,7 +182,7 @@ local setup = function(config)
       if (tab_truncation_factor > 0) then
         tab.title = '…' .. string.sub(
           tab.title,
-          math.ceil(string.len(tab.title) * tab_truncation_factor) + 1 -- plus 1 for the ellipsis
+          math.ceil(string.len(tab.title) * tab_truncation_factor) + 1-- plus 1 for the ellipsis
         )
         tab.formatted_title = config.formatter(
           tab.active_win.buf_filetype_icon,

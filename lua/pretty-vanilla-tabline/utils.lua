@@ -1,5 +1,12 @@
 local M = {}
 
+function M.is_empty(value)
+  if (value and value ~= "") then
+    return false
+  end
+  return true
+end
+
 function M.split_string(str, delimiter)
   local result = {};
   for match in (str .. delimiter):gmatch("(.-)" .. delimiter) do
