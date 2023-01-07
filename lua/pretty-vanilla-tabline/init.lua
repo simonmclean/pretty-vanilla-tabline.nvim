@@ -1,5 +1,6 @@
 local setup = function(config)
-  vim.pretty_print("SETUP")
+  config = config or {}
+
   local _vim = _G.pvt_mock_vim or vim
   local api = _vim.api
   local required_version = '0.8.1'
@@ -31,19 +32,15 @@ local setup = function(config)
     }
   }
 
-  if config then
-    config = {
-      filetype_icons = config.filetype_icons or default_config.filetype_icons,
-      formatter = config.formatter or default_config.formatter,
-      empty_window_title = config.empty_window_title or default_config.empty_window_title,
-      highlight_groups = config.highlight_groups or default_config.highlight_groups
-    }
-  else
-    config = default_config
-  end
+  config = {
+    filetype_icons = config.filetype_icons or default_config.filetype_icons,
+    formatter = config.formatter or default_config.formatter,
+    empty_window_title = config.empty_window_title or default_config.empty_window_title,
+    highlight_groups = config.highlight_groups or default_config.highlight_groups
+  }
 
   local _ = require 'pretty-vanilla-tabline.utils'
-  local devicon_installed, devicons = pcall(require, 'nvim-web-devicons')
+  local devicons_installed, devicons = pcall(require, 'nvim-web-devicons')
 
   local function with_padding(str)
     return ' ' .. str .. ' '
@@ -105,7 +102,7 @@ local setup = function(config)
             return config.filetype_icons[buf_filetype]
           end
           -- Otherwise try to get one from devicons
-          if (devicon_installed and buf_filetype) then
+          if (devicons_installed and buf_filetype) then
             local icon = devicons.get_icon_by_filetype(buf_filetype)
             if (not _.is_empty(icon)) then
               return icon
