@@ -31,14 +31,6 @@ function M.list_map(tbl, fn)
   return newTbl
 end
 
-function M.list_concat(tbl, el)
-  tbl = tbl or {}
-  -- Note: Despite the deprecation warning, table.unpack does not work
-  local new_tbl = { unpack(tbl) }
-  table.insert(new_tbl, el)
-  return new_tbl
-end
-
 function M.list_foreach(tbl, fn)
   for _, value in pairs(tbl) do
     fn(value)

@@ -135,9 +135,6 @@ local setup = function(config)
       return result[tab_id]
     end)
 
-    vim.pretty_print('result_ordered')
-    vim.pretty_print(result_ordered)
-
     return result_ordered
   end
 
@@ -152,8 +149,6 @@ local setup = function(config)
 
     -- For each tab set the title
     local tabs = _.list_map(get_tab_win_buf_tree(), function(tab)
-      vim.pretty_print('tab')
-      vim.pretty_print(tab)
       local filename = _.last(_.split_string(tab.active_win.buf_name, '/'))
 
       tab.title = _.eval(function()
