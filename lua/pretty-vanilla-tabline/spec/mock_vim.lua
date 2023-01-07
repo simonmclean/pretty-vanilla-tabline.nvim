@@ -1,6 +1,8 @@
 local _ = require 'pretty-vanilla-tabline.utils'
 
-return function(tabs)
+return function(tabs, overrides)
+  overrides = overrides or {}
+
   return {
     o = {
       columns = 300,
@@ -104,7 +106,7 @@ return function(tabs)
         return name
       end,
 
-      nvim_set_current_tabpage = function(tab_id)
+      nvim_set_current_tabpage = overrides.nvim_set_current_tabpage or function(tab_id)
         return nil
       end
     }

@@ -2,7 +2,6 @@
 -- rename "tree" to something more accurate
 -- Check that the code comments are still accurate
 -- Check that the setup function isn't being spammed
--- Unit test the pretty_vanilla_tabline and pretty_vanilla_tabline_switch_tab functions by mocking vim.api
 local setup = function(config)
   local _vim = _G.pvt_mock_vim or vim
   local api = _vim.api
