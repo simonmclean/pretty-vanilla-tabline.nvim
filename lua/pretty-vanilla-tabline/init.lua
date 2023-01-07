@@ -1,8 +1,5 @@
--- TODO:
--- rename "tree" to something more accurate
--- Check that the code comments are still accurate
--- Check that the setup function isn't being spammed
 local setup = function(config)
+  vim.pretty_print("SETUP")
   local _vim = _G.pvt_mock_vim or vim
   local api = _vim.api
   local required_version = '0.8.1'
@@ -60,7 +57,7 @@ local setup = function(config)
     return '%' .. tab_id .. '@v:lua.pretty_vanilla_tabline_switch_tab@' .. str .. '%T'
   end
 
-  local function get_tab_win_buf_tree()
+  local function get_tab_win_buf_state()
     --[[
   The final result will be a table of [tab_id] to [data] where [data] contains:
   tab_id : number
@@ -84,16 +81,15 @@ local setup = function(config)
     -- Get the currently active tab
     local current_tab = api.nvim_get_current_tabpage()
 
-    -- Add tab data to the tree
+    -- For each tab, set the tab_id and is_active flag
     _.list_foreach(tabs, function(tab_id)
-      -- indexing this way to preserve the order returned by nvim_list_tabpages
       result[tab_id] = {
         tab_id = tab_id,
         is_active = tab_id == current_tab,
       }
     end)
 
-    -- Add window and buffer data to the tree
+    -- Add window and buffer data associated with each tab
     _.list_foreach(windows, function(win_id)
       local tab_id = api.nvim_win_get_tabpage(win_id)
       local buf_id = api.nvim_win_get_buf(win_id)
@@ -147,7 +143,7 @@ local setup = function(config)
     local vim_col_width = _vim.o.columns
 
     -- For each tab set the title
-    local tabs = _.list_map(get_tab_win_buf_tree(), function(tab)
+    local tabs = _.list_map(get_tab_win_buf_state(), function(tab)
       local filename = _.last(_.split_string(tab.active_win.buf_name, '/'))
 
       tab.title = _.eval(function()
@@ -181,7 +177,7 @@ local setup = function(config)
       return 1 - (vim_col_width / tabline_col_width)
     end)
 
-    -- Create the tabline strings, including highlight groups
+    -- Truncate titles if needed, then set highlight groups
     local tabline_strings = _.list_map(tabs, function(tab)
       if (tab_truncation_factor > 0) then
         tab.title = '…' .. string.sub(
