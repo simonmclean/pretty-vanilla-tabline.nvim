@@ -1,9 +1,14 @@
-local api = vim.api
-
+-- TODO:
+-- rename "tree" to something more accurate
+-- Check that the code comments are still accurate
+-- Check that the setup function isn't being spammed
+-- Unit test the pretty_vanilla_tabline and pretty_vanilla_tabline_switch_tab functions by mocking vim.api
 local setup = function(config)
+  local _vim = _G.pvt_mock_vim or vim
+  local api = _vim.api
   local required_version = '0.8.1'
 
-  if (vim.fn.has('nvim-' .. required_version) == 0) then
+  if (_vim.fn.has('nvim-' .. required_version) == 0) then
     local msg = "pretty-vanilla-tabline requires neovim version " .. required_version .. " or above"
     api.nvim_echo({ { msg, "WarningMsg" } }, true, {})
     return
@@ -130,6 +135,9 @@ local setup = function(config)
       return result[tab_id]
     end)
 
+    vim.pretty_print('result_ordered')
+    vim.pretty_print(result_ordered)
+
     return result_ordered
   end
 
@@ -140,10 +148,12 @@ local setup = function(config)
   _G.pretty_vanilla_tabline = function()
     -- used to keep track of the total width of all the tabs
     local tabline_col_width = 0
-    local vim_col_width = vim.o.columns
+    local vim_col_width = _vim.o.columns
 
     -- For each tab set the title
     local tabs = _.list_map(get_tab_win_buf_tree(), function(tab)
+      vim.pretty_print('tab')
+      vim.pretty_print(tab)
       local filename = _.last(_.split_string(tab.active_win.buf_name, '/'))
 
       tab.title = _.eval(function()
@@ -212,8 +222,7 @@ local setup = function(config)
     return tabline
   end
 
-  vim.o.tabline = '%!v:lua.pretty_vanilla_tabline()'
-
+  _vim.o.tabline = '%!v:lua.pretty_vanilla_tabline()'
 end
 
 return {
