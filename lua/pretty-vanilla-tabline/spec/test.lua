@@ -1,8 +1,5 @@
 -- To run test suite :PlenaryBustedFile %
 
--- TODO:
--- Test title truncation feature
-
 local tabs = require 'pretty-vanilla-tabline.spec.fixtures'.tabs1
 local create_mock_vim = require 'pretty-vanilla-tabline.spec.mock_vim'
 local pretty_vanilla_tabline = require 'pretty-vanilla-tabline'
