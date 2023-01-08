@@ -4,8 +4,9 @@ local setup = function(config)
   local _vim = _G.pvt_mock_vim or vim
   local api = _vim.api
   local required_version = '0.8.1'
+  local has_required_version = _vim.fn.has('nvim-' .. required_version)
 
-  if (_vim.fn.has('nvim-' .. required_version) == 0) then
+  if (has_required_version == 0 or not has_required_version) then
     local msg = "pretty-vanilla-tabline requires neovim version " .. required_version .. " or above"
     api.nvim_echo({ { msg, "WarningMsg" } }, true, {})
     return

@@ -4,21 +4,21 @@ return function(tabs, overrides)
   overrides = overrides or {}
 
   return {
-    o = {
+    o = overrides.o or {
       columns = 300,
       tabline = ''
     },
-    fn = {
+    fn = overrides.fn or {
       has = function(str)
-        return true
+        return 1
       end
     },
     api = {
-      nvim_echo = function(a, b, c)
+      nvim_echo = overrides.nvim_echo or function(a, b, c)
         return nil
       end,
 
-      nvim_list_tabpages = function()
+      nvim_list_tabpages = overrides.nvim_list_tabpages or function()
         return _.list_map(tabs, function(tab)
           return tab.tab_id
         end)
