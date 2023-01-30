@@ -10,7 +10,7 @@ into this spectacle of superlative beauty 🤩
 
 ![Plugin tabline](assets/screenshot_plugin.png?raw=true "Plugin tabline")
 
-## What this plugin does
+## 🤔 What this plugin does
 
 Using default configuration your tab titles will consist of
 
@@ -22,7 +22,7 @@ The filename and filetype will refer to the active window of each tab. Filename 
 
 See below for how to change this display configuration.
 
-## Installation
+## 📦 Installation
 
 ```lua
 -- Example installation using Packer
@@ -33,7 +33,7 @@ use "kyazdani42/nvim-web-devicons" -- optional, if you want icons to work out of
 require "pretty-vanilla-tabline".setup()
 ```
 
-## Configuration
+## ⚙️ Configuration
 
 ### filetype_icons
 
@@ -95,7 +95,7 @@ require 'pretty-vanilla-tabline'.setup {
 }
 ```
 
-## Q&A
+## 🙋 Q&A
 
 > Why another tabline plugin?
 
